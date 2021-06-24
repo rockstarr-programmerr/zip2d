@@ -9,7 +9,8 @@
 			"xiosbase": "cpp",
 			"filesystem": "cpp",
 			"iostream": "cpp",
-			"ostream": "cpp"
+			"ostream": "cpp",
+			"utility": "cpp"
 		}
 	}
 }
