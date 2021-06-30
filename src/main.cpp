@@ -5,6 +5,7 @@
 #include <map>
 
 #include "FsUtils.h"
+#include "RunLengthEnc.h"
 
 namespace fs = std::filesystem;
 
@@ -16,6 +17,9 @@ int main(int argc, char* argv[])
 
     FsUtils fs_utils(input_dir);
     FsUtils::BitMap map = fs_utils.mapFilenameToBits();
+
+    RunLengthEnc encoder(map);
+    // encoder.encode();
 
     for (auto item : map)
     {
