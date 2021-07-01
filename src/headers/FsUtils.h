@@ -5,7 +5,8 @@
 #include <map>
 #include <vector>
 
-namespace fs = std::filesystem;
+using namespace std;
+namespace fs = filesystem;
 
 class FsUtils
 {
@@ -15,7 +16,9 @@ protected:
 public:
     FsUtils(fs::path input_dir);
 
-    typedef std::map<fs::path, std::vector<bool>> BitMap;
+    typedef vector<bool> BitVec;
+    typedef map<fs::path, BitVec> BitMap;
+
     BitMap mapFilenameToBits();
 };
 
