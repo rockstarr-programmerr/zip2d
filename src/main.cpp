@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 
+#include "BitUtils.h"
 #include "FsUtils.h"
 #include "RunLengthEnc.h"
 
@@ -15,6 +16,7 @@ int main(int argc, char* argv[])
     fs::path cwd = fs::current_path();
     fs::path input_dir = fs::relative("dummy_input", cwd);
 
+    BitUtils bit_utils;
     FsUtils fs_utils(input_dir);
     FsUtils::BitMap map = fs_utils.mapFilenameToBits();
 
@@ -26,7 +28,8 @@ int main(int argc, char* argv[])
         std::cout << item.first << ": ";
         for (auto bit : item.second)
         {
-            std::cout << bit;
+            int bit_repr = bit_utils.getBitRepr(bit);
+            std::cout << bit_repr;
         }
         std::cout << std::endl;
     }
@@ -37,9 +40,10 @@ int main(int argc, char* argv[])
     {
         for (auto bit_repeat : bit_repeat_vec)
         {
-            BitUtils::Bit bit = bit_repeat[0];
-            int repeat = bit_repeat[1];
-            std::cout << bit << "x" << repeat << " ";
+            Bit bit = bit_repeat.bit;
+            int repeat = bit_repeat.repeat;
+            int bit_repr = bit_utils.getBitRepr(bit);
+            std::cout << bit_repr << "x" << repeat << " ";
         }
         std::cout << std::endl;
     }

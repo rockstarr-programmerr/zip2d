@@ -2,7 +2,6 @@
 #define ZIP_2D_RUN_LENGTH_ENCODER
 
 #include <vector>
-#include <array>
 
 #include "FsUtils.h"
 #include "BitUtils.h"
@@ -13,7 +12,7 @@ class RunLengthEnc
 {
 private:
     typedef vector<fs::path> FilenameVec;
-    typedef vector<BitUtils::Bit> Bit1DVec;
+    typedef vector<Bit> Bit1DVec;
     typedef vector<Bit1DVec> Bit2DVec;
 
     FsUtils::BitMap m_map;
@@ -28,11 +27,12 @@ protected:
 public:
     RunLengthEnc(FsUtils::BitMap map);
 
-    typedef array<int, 2> BitRepeat;
+    struct BitRepeat {
+        Bit bit;
+        int repeat;
+    };
     typedef vector<BitRepeat> BitRepeatVec;
     typedef vector<BitRepeatVec> RLEncMap;
-
-    int m_no_bit = 2;  // "ON" bit is 1, "OFF" bit is 0, so here we define no bit as 2
 
     RLEncMap encode();
 };

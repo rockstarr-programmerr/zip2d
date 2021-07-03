@@ -5,6 +5,7 @@
 
 #include "RunLengthEnc.h"
 #include "FsUtils.h"
+#include "BitUtils.h"
 
 namespace fs = std::filesystem;
 
@@ -23,38 +24,36 @@ RunLengthEnc::RLEncMap RunLengthEnc::encode()
     RLEncMap enc_map = {};
     for (auto vertical_bits : m_bit_2d_vec)
     {
-        BitRepeatVec col_zip = {};
-        BitRepeat bit_repeat = {m_no_bit, 0};
-        BitUtils::Bit last_bit = m_no_bit;
+        BitRepeatVec bit_repeat_vec = {};
+        BitRepeat bit_repeat = {Bit::EMPTY, 0};
+        Bit previous_bit = Bit::EMPTY;
         bool is_first_loop = true;
 
         for (auto current_bit : vertical_bits)
         {
             if (is_first_loop) {
                 bit_repeat = {current_bit, 1};
-                last_bit = current_bit;
+                previous_bit = current_bit;
                 is_first_loop = false;
                 continue;
             }
 
-            bool is_new_sequence = last_bit != current_bit;
+            bool is_new_sequence = previous_bit != current_bit;
             if (is_new_sequence) {
-                BitRepeat bit_repeat_copy = bit_repeat;
-                col_zip.push_back(bit_repeat_copy);
-
+                bit_repeat_vec.push_back(bit_repeat);
                 bit_repeat = {current_bit, 1};
             } else {
-                bit_repeat[1]++;
+                bit_repeat.repeat ++;
             }
 
-            last_bit = current_bit;
+            previous_bit = current_bit;
         }
 
-        bool is_no_vertical_bits = bit_repeat[0] != m_no_bit && bit_repeat[1] != 0;
+        bool is_no_vertical_bits = bit_repeat.bit == Bit::EMPTY && bit_repeat.repeat == 0;
         if (!is_no_vertical_bits)
-            col_zip.push_back(bit_repeat);
+            bit_repeat_vec.push_back(bit_repeat);
 
-        enc_map.push_back(col_zip);
+        enc_map.push_back(bit_repeat_vec);
     }
 
     return enc_map;
@@ -102,10 +101,10 @@ RunLengthEnc::Bit2DVec RunLengthEnc::getVerticalBit2DVec()
             int file_size = file_size_map[filename];
 
             if (index < file_size) {
-                BitUtils::Bit bit = bit_vec[index];
+                Bit bit = bit_vec[index];
                 bit_1d_vec.push_back(bit);
             } else {
-                bit_1d_vec.push_back(m_no_bit);
+                bit_1d_vec.push_back(Bit::EMPTY);
             }
         }
 

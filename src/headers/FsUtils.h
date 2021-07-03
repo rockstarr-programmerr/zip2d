@@ -18,7 +18,7 @@ protected:
 public:
     FsUtils(fs::path input_dir);
 
-    typedef vector<BitUtils::Bit> BitVec;
+    typedef vector<Bit> BitVec;
     typedef map<fs::path, BitVec> BitMap;
 
     BitMap mapFilenameToBits();
