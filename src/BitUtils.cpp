@@ -1,9 +1,13 @@
 #include "BitUtils.h"
 
-bool BitUtils::getBit(char c, short pos)
+BitUtils::Bit BitUtils::getBit(char c, short pos)
 {
     pos--;
     short mask = 0x1;
-    bool bit = (c >> pos) & mask;
-    return bit;
+    BitUtils::Bit bit = (c >> pos) & mask;
+    if (bit) {
+        return 1;
+    } else {
+        return 0;
+    }
 }

@@ -7,7 +7,10 @@ private:
 protected:
 public:
     BitUtils() {};
-    bool getBit(char c, short pos);
+
+    typedef bool Bit;
+
+    Bit getBit(char c, short pos);
 };
 
 #endif

@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#include "BitUtils.h"
+
 using namespace std;
 namespace fs = filesystem;
 
@@ -16,7 +18,7 @@ protected:
 public:
     FsUtils(fs::path input_dir);
 
-    typedef vector<bool> BitVec;
+    typedef vector<BitUtils::Bit> BitVec;
     typedef map<fs::path, BitVec> BitMap;
 
     BitMap mapFilenameToBits();

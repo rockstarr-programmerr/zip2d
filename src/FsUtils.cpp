@@ -35,14 +35,14 @@ FsUtils::BitMap FsUtils::mapFilenameToBits()
             char* buffer = new char[size];
             stream.read(buffer, size);
 
-            std::vector<bool> content;
+            std::vector<BitUtils::Bit> content;
 
             for (long i = 0; i < size; i++)
             {
                 char c = buffer[i];
                 for (short pos = 8; pos > 0; pos--)
                 {
-                    bool bit = bit_utils.getBit(c, pos);
+                    BitUtils::Bit bit = bit_utils.getBit(c, pos);
                     content.push_back(bit);
                 }
             }
