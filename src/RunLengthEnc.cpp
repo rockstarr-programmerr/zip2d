@@ -12,11 +12,52 @@ RunLengthEnc::RunLengthEnc(FsUtils::BitMap map)
 {
     m_map = map;
     m_filename_vec = {};
+    m_bit_2d_vec = {};
 }
 
 RunLengthEnc::RLEncMap RunLengthEnc::encode()
 {
     m_filename_vec = getFilenameVec();
+    m_bit_2d_vec = getVerticalBit2DVec();
+
+    RLEncMap enc_map = {};
+    for (auto vertical_bits : m_bit_2d_vec)
+    {
+        BitRepeatVec col_zip = {};
+        BitRepeat bit_repeat = {m_no_bit, 0};
+        BitUtils::Bit last_bit = m_no_bit;
+        bool is_first_loop = true;
+
+        for (auto current_bit : vertical_bits)
+        {
+            if (is_first_loop) {
+                bit_repeat = {current_bit, 1};
+                last_bit = current_bit;
+                is_first_loop = false;
+                continue;
+            }
+
+            bool is_new_sequence = last_bit != current_bit;
+            if (is_new_sequence) {
+                BitRepeat bit_repeat_copy = bit_repeat;
+                col_zip.push_back(bit_repeat_copy);
+
+                bit_repeat = {current_bit, 1};
+            } else {
+                bit_repeat[1]++;
+            }
+
+            last_bit = current_bit;
+        }
+
+        bool is_no_vertical_bits = bit_repeat[0] != m_no_bit && bit_repeat[1] != 0;
+        if (!is_no_vertical_bits)
+            col_zip.push_back(bit_repeat);
+
+        enc_map.push_back(col_zip);
+    }
+
+    return enc_map;
 }
 
 RunLengthEnc::FilenameVec RunLengthEnc::getFilenameVec()
@@ -48,9 +89,6 @@ RunLengthEnc::Bit2DVec RunLengthEnc::getVerticalBit2DVec()
         fs::path path = item.first;
         file_size_map[path] = file_size;
     }
-
-    // Get number of files
-    int num_of_files = m_filename_vec.size();
 
     // Create 2D vector
     Bit2DVec bit_2d_vec = {};
